@@ -15,7 +15,8 @@ There are several variations of bandit algorithms, see [Sutton, Barto (2015)](ht
 - **Greedy bandit algorithm** - The simplest bandit algorithm which always chooses the arm with the highest estimated reward, i.e.
     $$A_t = \arg \max_a Q_t(a)$$
     where $Q_t(a)$ is the estimated reward of arm $a$ at time $t$.
-- **Epsilon-greedy bandit algorithm** - A simple bandit algorithm which chooses the arm with the highest estimated reward with probability 1-epsilon, and chooses a random arm with probability epsilon, i.e.
-    $$A_t = \begin{cases} \arg \max_a Q_t(a) & \text{with probability } 1-\epsilon \\ \text{random arm} & \text{with probability } \epsilon \end{cases} $$
+- **Epsilon-greedy bandit algorithm** - A simple bandit algorithm which chooses the arm with the highest estimated reward with probability $1-\epsilon$, and chooses a random arm with probability epsilon, i.e. for a given epsilon $\epsilon > 0$,
+    $$A_t = \arg \max_a Q_t(a) \quad \text{with} \ \ p=1-\epsilon$$
+    $$A_t = \text{random arm} \quad \text{with} \ \ p=\epsilon.$$
 - **Upper confidence bound (UCB) bandit algorithm** - A bandit algorithm which chooses the arm with the highest estimated reward plus a bonus term which depends on the number of times the arm has been sampled. This bonus term is equal to the square root of the logarithm of the total number of steps divided by the number of times the arm has been sampled, i.e. $$A_t = \arg \max_a \left[Q_t(a) + c\sqrt{\frac{\log(t)}{N(a)}} \right],$$
     where $c$ is a constant which determines the exploration-exploitation trade-off.
