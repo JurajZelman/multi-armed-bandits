@@ -6,6 +6,8 @@ The following is a simple implementation of the **multi-armed bandit problem**. 
 
 In this implementation, I additionally include a *hold* parameter, which forces the algorithm to hold the current action for a certain number of steps. This could be desired for example in the context of the trading algorithms, where you want to test a certain algorithm for a certain number of steps before switching to another one.
 
+The bandit simulation can be found in `main.ipynb` notebook.
+
 ## Bandits
 
 There are several variations of bandit algorithms, see [Sutton, Barto (2015)](https://inst.eecs.berkeley.edu//~cs188/sp20/assets/files/SuttonBartoIPRLBook2ndEd.pdf). The following are implemented in `bandits/bandits.py`:
