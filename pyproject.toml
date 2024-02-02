@@ -1,0 +1,46 @@
+[tool.poetry]
+name = "bandits"
+version = "0.1.0"
+description = "Multi-armed bandit algorithms."
+authors = [
+    "Juraj Zelman <zelman.juraj@gmail.com>",
+]
+readme = "README.md"
+
+[[tool.poetry.source]]
+name = "PyPI"
+priority = "primary"
+
+[tool.poetry.dependencies]
+python = ">=3.11,<3.12"
+numpy = "^1.26.3"
+matplotlib = "^3.8.2"
+
+[tool.poetry.group.dev.dependencies]
+pre-commit = "^3.0.4"
+mypy = "^1.0.0"
+ipykernel = "^6.29.0"
+
+[tool.poetry.group.test.dependencies]
+pytest = "^7.2.1"
+pytest-cov = "^4.0.0"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
+
+[tool.black]
+line-length = 80
+safe = true
+
+[tool.isort]
+profile = "black"
+skip_gitignore = true
+line_length = 80
+
+[tool.coverage.report]
+exclude_lines = ["pragma: no cover"]
+
+[tool.bandit]
+exclude_dirs = ["tests"]
+skips = ["B311"]
