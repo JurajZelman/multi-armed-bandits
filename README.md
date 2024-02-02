@@ -4,7 +4,7 @@
 
 The following is a simple implementation of the **multi-armed bandit problem**. The problem is as follows. You are faced with $k$ distributions (or *arms*) which are not known to you. As an example, these could be several variations of *high-frequency trading algorithms* with unknown returns. You can sample from these distributions, and you want to *maximize your reward*, i.e. maximize your average return over time. Currently, the distributions are assumed to be *stationary*.
 
-In this implementation, I additionally include a *hold* parameter, which forces the algorithm to hold the current action for a certain number of steps. This could be desired for example in the context of the trading algorithms, where you want to test a certain algorithm for a certain number of steps before switching to another one.
+In this implementation, I additionally include a *hold* parameter for smoother optimization, which forces the algorithm to hold the current action for a certain number of steps. This could be desired for example in the context of the trading algorithms, where you want to test a certain algorithm for a certain number of steps before switching to another one.
 
 The bandit simulation can be found in `main.ipynb` notebook.
 
