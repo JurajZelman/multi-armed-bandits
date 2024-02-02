@@ -41,21 +41,29 @@ class Bandit(ABC):
 class GreedyBandit(Bandit):
     """Greedy bandit algorithm."""
 
-    def __init__(self, k: int, label: str, seed: int = 42) -> None:
+    def __init__(
+        self, k: int, label: str, hold: int = 0, seed: int = 42
+    ) -> None:
         """
         Initialize the bandit.
 
         Args:
             k: Number of arms.
             label: The label for the bandit used for plotting.
+            hold: Number of times to hold the selected arm before exploring.
+                Default is `0` (no holding).
             seed: The random seed for reproducibility. Default is `42`.
         """
         self.k = k
         self.label = label
+        self.hold = hold
         self.rng = np.random.default_rng(seed=seed)
         self.rew_est = np.zeros(k)
         self.counts = np.zeros(k)
         self.rewards = []
+
+        self.hold_count = 0
+        self.hold_arm = None
 
     def select_arm(self) -> int:
         """
@@ -64,10 +72,18 @@ class GreedyBandit(Bandit):
         Returns:
             The index of the arm to select.
         """
-        # Select argmax of rewards but break ties randomly
-        max_reward = np.max(self.rew_est)
-        max_indices = np.where(self.rew_est == max_reward)[0]
-        return self.rng.choice(max_indices)
+        # Hold the arm for a number of times before exploring
+        if self.hold_arm is not None and self.hold_count < self.hold:
+            self.hold_count += 1
+            return self.hold_arm
+
+        # Explore new arms
+        else:
+            self.hold_count = 1
+            max_reward = np.max(self.rew_est)
+            max_indices = np.where(self.rew_est == max_reward)[0]
+            self.hold_arm = self.rng.choice(max_indices)
+            return self.hold_arm
 
     def update(self, arm: int, reward: float) -> None:
         """
@@ -86,7 +102,7 @@ class EpsilonGreedyBandit(Bandit):
     """Epsilon greedy bandit algorithm."""
 
     def __init__(
-        self, k: int, label: str, epsilon: float, seed: int = 42
+        self, k: int, label: str, epsilon: float, hold: int = 0, seed: int = 42
     ) -> None:
         """
         Initialize the bandit.
@@ -94,16 +110,22 @@ class EpsilonGreedyBandit(Bandit):
         Args:
             k: Number of arms.
             label: The label for the bandit used for plotting.
+            hold: Number of times to hold the selected arm before exploring.
+                Default is `0` (no holding).
             epsilon: The probability of exploration.
             seed: The random seed for reproducibility. Default is `42`.
         """
         self.k = k
         self.label = label
         self.epsilon = epsilon
+        self.hold = hold
         self.rng = np.random.default_rng(seed=seed)
         self.rew_est = np.zeros(k)
         self.counts = np.zeros(k)
         self.rewards = []
+
+        self.hold_count = 0
+        self.hold_arm = None
 
     def select_arm(self) -> int:
         """
@@ -112,11 +134,18 @@ class EpsilonGreedyBandit(Bandit):
         Returns:
             The index of the arm to select.
         """
-        if self.rng.random() < self.epsilon:
-            return self.rng.integers(self.k)
-        max_reward = np.max(self.rew_est)
-        max_indices = np.where(self.rew_est == max_reward)[0]
-        return self.rng.choice(max_indices)
+        if self.hold_arm is not None and self.hold_count < self.hold:
+            self.hold_count += 1
+            return self.hold_arm
+        else:
+            self.hold_count = 1
+            if self.rng.random() < self.epsilon:
+                self.hold_arm = self.rng.integers(self.k)
+                return self.hold_arm
+            max_reward = np.max(self.rew_est)
+            max_indices = np.where(self.rew_est == max_reward)[0]
+            self.hold_arm = self.rng.choice(max_indices)
+            return self.hold_arm
 
     def update(self, arm: int, reward: float) -> None:
         """
@@ -134,7 +163,9 @@ class EpsilonGreedyBandit(Bandit):
 class UpperConfidenceBoundBandit(Bandit):
     """Upper confidence bound bandit algorithm."""
 
-    def __init__(self, k: int, label: str, c: float, seed: int = 42) -> None:
+    def __init__(
+        self, k: int, label: str, c: float, hold: int = 0, seed: int = 42
+    ) -> None:
         """
         Initialize the bandit.
 
@@ -142,15 +173,21 @@ class UpperConfidenceBoundBandit(Bandit):
             k: Number of arms.
             label: The label for the bandit used for plotting.
             c: The exploration parameter.
+            hold: Number of times to hold the selected arm before exploring.
+                Default is `0` (no holding).
             seed: The random seed for reproducibility. Default is `42`.
         """
         self.k = k
         self.label = label
         self.c = c
+        self.hold = hold
         self.rng = np.random.default_rng(seed=seed)
         self.rew_est = np.zeros(k)
         self.counts = np.zeros(k)
         self.rewards = []
+
+        self.hold_count = 0
+        self.hold_arm = None
 
     def select_arm(self) -> int:
         """
@@ -159,9 +196,18 @@ class UpperConfidenceBoundBandit(Bandit):
         Returns:
             The index of the arm to select.
         """
-        t = np.sum(self.counts) + 1
-        ucb = self.rew_est + self.c * np.sqrt(np.log(t) / (self.counts + 1e-5))
-        return np.argmax(ucb)
+        if self.hold_arm is not None and self.hold_count < self.hold:
+            self.hold_count += 1
+            return self.hold_arm
+        else:
+            t = np.sum(self.counts) + 1
+            ucb = self.rew_est + self.c * np.sqrt(
+                np.log(t) / (self.counts + 1e-5)
+            )
+            max_reward = np.max(ucb)
+            max_indices = np.where(ucb == max_reward)[0]
+            self.hold_arm = self.rng.choice(max_indices)
+            return self.hold_arm
 
     def update(self, arm: int, reward: float) -> None:
         """
