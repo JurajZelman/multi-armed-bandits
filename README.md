@@ -10,7 +10,7 @@ The bandit simulation can be found in [`main.ipynb`](/main.ipynb) notebook.
 
 ## Bandits
 
-There are several variations of bandit algorithms, see [Sutton, Barto (2015)](https://inst.eecs.berkeley.edu//~cs188/sp20/assets/files/SuttonBartoIPRLBook2ndEd.pdf). The following are implemented in [`bandits/bandits.py`](/bandits/bandits.py):
+There are several variations of bandit algorithms, see [Sutton, Barto (2015)](https://web.stanford.edu/class/psych209/Readings/SuttonBartoIPRLBook2ndEd.pdf). The following are implemented in [`bandits/bandits.py`](/bandits/bandits.py):
 
 - **Greedy bandit algorithm** - The simplest bandit algorithm which always chooses the arm with the highest estimated reward, i.e.
     $$A_t = \arg \max_a Q_t(a)$$
