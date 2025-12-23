@@ -1,48 +1,64 @@
-[tool.poetry]
-name = "bandits"
+[project]
+name = "multi-armed-bandits"
 version = "0.1.0"
 description = "Multi-armed bandit algorithms."
 authors = [
-    "Juraj Zelman <zelman.juraj@gmail.com>",
+    { name = "Juraj Zelman"},
 ]
 readme = "README.md"
+requires-python = ">=3.11,<3.12"
+dependencies = [
+    "numpy>=1.26.3",
+    "matplotlib>=3.8.2",
+    "pyarrow>=15.0.0",
+    "ipykernel>=6.29.0",
+    "polars>=1.36.1",
+]
 
-[[tool.poetry.source]]
-name = "PyPI"
-priority = "primary"
-
-[tool.poetry.dependencies]
-python = ">=3.11,<3.12"
-numpy = "^1.26.3"
-matplotlib = "^3.8.2"
-pandas = "^2.2.0"
-pyarrow = "^15.0.0"
-
-[tool.poetry.group.dev.dependencies]
-pre-commit = "^3.0.4"
-mypy = "^1.0.0"
-ipykernel = "^6.29.0"
-
-[tool.poetry.group.test.dependencies]
-pytest = "^7.2.1"
-pytest-cov = "^4.0.0"
+[project.optional-dependencies]
+dev = [
+    "ruff>=0.6.5",
+    "pre-commit>=4.2.0",
+    "pytest>=8.3.5",
+    "pytest-cov>=6.1.1",
+]
 
 [build-system]
-requires = ["poetry-core"]
-build-backend = "poetry.core.masonry.api"
+requires = ["hatchling"]
+build-backend = "hatchling.build"
 
-[tool.black]
-line-length = 80
-safe = true
+[tool.ruff]
+line-length = 100
+indent-width = 4
 
-[tool.isort]
-profile = "black"
-skip_gitignore = true
-line_length = 80
+[tool.ruff.lint]
+select = [
+    "E",   # pycodestyle errors (code style violations)
+    "W",   # pycodestyle warnings (potential style issues)
+    "F",   # pyflakes (undefined names, unused imports)
+    "I",   # isort (import sorting and organization)
+    "B",   # flake8-bugbear (common Python programming mistakes)
+    "C4",  # flake8-comprehensions (list/dict/set comprehension improvements)
+    "N",   # PEP8 naming conventions (variable and function naming)
+    "D",   # pydocstyle (docstring style and presence)
+    "D213", # multi-line docstring summary should start at the first line
+]
+ignore = [
+    "C901",  # cyclomatic complexity too high (overly complex functions)
+    "W191",  # indentation contains tabs (use spaces instead)
+    "D401",  # imperative mood in docstrings (first line should be imperative)
+    "D212",  # multi-line docstring summary should start at the first line
+    "D205",  # missing blank line after summary line in docstrings
+]
 
-[tool.coverage.report]
-exclude_lines = ["pragma: no cover"]
+[tool.ruff.lint.pydocstyle]
+convention = "google"
 
-[tool.bandit]
-exclude_dirs = ["tests"]
-skips = ["B311"]
+[tool.ruff.format]
+quote-style = "double"
+indent-style = "space"
+skip-magic-trailing-comma = false
+line-ending = "auto"
+
+[tool.hatch.build.targets.wheel]
+include = ["*"]
