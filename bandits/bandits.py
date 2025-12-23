@@ -41,9 +41,7 @@ class Bandit(ABC):
 class GreedyBandit(Bandit):
     """Greedy bandit algorithm."""
 
-    def __init__(
-        self, k: int, label: str, hold: int = 0, seed: int = 42
-    ) -> None:
+    def __init__(self, k: int, label: str, hold: int = 0, seed: int = 42) -> None:
         """
         Initialize the bandit.
 
@@ -101,9 +99,7 @@ class GreedyBandit(Bandit):
 class EpsilonGreedyBandit(Bandit):
     """Epsilon greedy bandit algorithm."""
 
-    def __init__(
-        self, k: int, label: str, epsilon: float, hold: int = 0, seed: int = 42
-    ) -> None:
+    def __init__(self, k: int, label: str, epsilon: float, hold: int = 0, seed: int = 42) -> None:
         """
         Initialize the bandit.
 
@@ -163,9 +159,7 @@ class EpsilonGreedyBandit(Bandit):
 class UpperConfidenceBoundBandit(Bandit):
     """Upper confidence bound bandit algorithm."""
 
-    def __init__(
-        self, k: int, label: str, c: float, hold: int = 0, seed: int = 42
-    ) -> None:
+    def __init__(self, k: int, label: str, c: float, hold: int = 0, seed: int = 42) -> None:
         """
         Initialize the bandit.
 
@@ -201,9 +195,7 @@ class UpperConfidenceBoundBandit(Bandit):
             return self.hold_arm
         else:
             t = np.sum(self.counts) + 1
-            ucb = self.rew_est + self.c * np.sqrt(
-                np.log(t) / (self.counts + 1e-5)
-            )
+            ucb = self.rew_est + self.c * np.sqrt(np.log(t) / (self.counts + 1e-5))
             max_reward = np.max(ucb)
             max_indices = np.where(ucb == max_reward)[0]
             self.hold_arm = self.rng.choice(max_indices)
